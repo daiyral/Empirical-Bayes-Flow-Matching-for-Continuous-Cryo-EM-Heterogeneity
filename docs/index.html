@@ -24,20 +24,27 @@
   <header class="hero">
     <div class="container">
       <h1 class="title">Empirical Bayes Flow Matching for Continuous Cryo-EM Heterogeneity</h1>
+      <p class="venue">NeurIPS 2026</p>
 
       <ul class="authors">
         <li>Daniel Aibinder</li>
         <li>Azmi Haider</li>
         <li>Dan Rosenbaum</li>
       </ul>
-      <p class="venue">Preprint</p>
+      <p class="affiliation">University of Haifa</p>
 
       <nav class="links" aria-label="Project links">
         <!-- When the paper is online, replace this <span> with:
-             <a class="button" href="https://arxiv.org/abs/XXXX.XXXXX"> ...same icon... <span>Paper</span></a> -->
+             <a class="button" href="PAPER_URL"> ...same icon... <span>Paper</span></a> -->
         <span class="button is-disabled" aria-disabled="true">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13v1.5h8V13H8zm0 3.5V18h8v-1.5H8z"/></svg>
           <span>Paper <small>(coming soon)</small></span>
+        </span>
+        <!-- When the arXiv version is online, replace this <span> with:
+             <a class="button" href="https://arxiv.org/abs/XXXX.XXXXX"> ...same icon... <span>arXiv</span></a> -->
+        <span class="button is-disabled" aria-disabled="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v4H3V4zm1 6h16v10H4V10zm5 2v2h6v-2H9z"/></svg>
+          <span>arXiv <small>(coming soon)</small></span>
         </span>
         <a class="button" href="https://github.com/daiyral/Empirical-Bayes-Flow-Matching-for-Continuous-Cryo-EM-Heterogeneity">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
@@ -47,48 +54,61 @@
     </div>
   </header>
 
-  <!-- Trajectory videos: drop the four .mp4 files into docs/static/videos/ with exactly these names. -->
-  <section class="teaser" aria-label="Sampled conformational trajectories">
+  <section class="teaser" aria-label="EB-FM pipeline overview">
     <div class="container wide">
-      <div class="video-grid">
+      <figure class="pipeline">
+        <figcaption class="pipeline-title"><b>EB-FM</b> pipeline for 2D cryo-EM images to 3D atom ensembles</figcaption>
+        <div class="pipeline-flow">
 
-        <figure class="video-card">
-          <div class="video-frame">
-            <video src="static/videos/1a62_A_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="1a62_A: sampled trajectory"></video>
-            <div class="video-missing"><strong>Video coming soon</strong><code>1a62_A_traj_sample.mp4</code></div>
+          <div class="pipeline-stage pipeline-in">
+            <div class="particles" role="img" aria-label="Twelve noisy 2D cryo-EM projection images of a protein">
+              <span class="particle" style="--c:0;--r:0;--i:0"></span>
+              <span class="particle" style="--c:1;--r:0;--i:5"></span>
+              <span class="particle" style="--c:2;--r:0;--i:10"></span>
+              <span class="particle" style="--c:3;--r:0;--i:3"></span>
+              <span class="particle" style="--c:0;--r:1;--i:8"></span>
+              <span class="particle" style="--c:1;--r:1;--i:1"></span>
+              <span class="particle" style="--c:2;--r:1;--i:6"></span>
+              <span class="particle" style="--c:3;--r:1;--i:11"></span>
+              <span class="particle" style="--c:0;--r:2;--i:4"></span>
+              <span class="particle" style="--c:1;--r:2;--i:9"></span>
+              <span class="particle" style="--c:2;--r:2;--i:2"></span>
+              <span class="particle" style="--c:3;--r:2;--i:7"></span>
+            </div>
+            <p class="pipeline-label">2D cryo-EM images</p>
           </div>
-          <figcaption><span class="protein">1a62_A</span><span class="protein-desc">Transcription termination factor Rho &middot;&nbsp;130&nbsp;aa</span></figcaption>
-        </figure>
 
-        <figure class="video-card">
-          <div class="video-frame">
-            <video src="static/videos/1egw_C_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="1egw_C: sampled trajectory"></video>
-            <div class="video-missing"><strong>Video coming soon</strong><code>1egw_C_traj_sample.mp4</code></div>
+          <div class="pipeline-arrow" aria-hidden="true">
+            <div class="track track-in">
+              <span class="packet" style="--c:0;--r:0;--i:0"></span>
+              <span class="packet" style="--c:1;--r:0;--i:5"></span>
+              <span class="packet" style="--c:2;--r:0;--i:10"></span>
+              <span class="packet" style="--c:3;--r:0;--i:3"></span>
+              <span class="packet" style="--c:0;--r:1;--i:8"></span>
+              <span class="packet" style="--c:1;--r:1;--i:1"></span>
+              <span class="packet" style="--c:2;--r:1;--i:6"></span>
+              <span class="packet" style="--c:3;--r:1;--i:11"></span>
+              <span class="packet" style="--c:0;--r:2;--i:4"></span>
+              <span class="packet" style="--c:1;--r:2;--i:9"></span>
+              <span class="packet" style="--c:2;--r:2;--i:2"></span>
+              <span class="packet" style="--c:3;--r:2;--i:7"></span>
+            </div>
+            <span class="node">EB-FM</span>
+            <div class="track track-out">
+              <span class="atom" style="--i:0"></span>
+              <span class="atom" style="--i:1"></span>
+              <span class="atom" style="--i:2"></span>
+              <span class="atom" style="--i:3"></span>
+            </div>
           </div>
-          <figcaption><span class="protein">1egw_C</span><span class="protein-desc">Myocyte-specific enhancer factor 2A &middot;&nbsp;79&nbsp;aa</span></figcaption>
-        </figure>
 
-        <figure class="video-card">
-          <div class="video-frame">
-            <video src="static/videos/3rjs_A_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="3rjs_A: sampled trajectory"></video>
-            <div class="video-missing"><strong>Video coming soon</strong><code>3rjs_A_traj_sample.mp4</code></div>
+          <div class="pipeline-stage pipeline-out">
+            <video class="pipeline-video" src="static/videos/eb_fm_ensemble.mp4?v=5" poster="static/images/eb_fm_ensemble_poster.jpg" width="520" height="620" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="3D atomic structure of the protein moving through the conformations of the recovered ensemble"></video>
+            <p class="pipeline-label">3D atom ensemble</p>
           </div>
-          <figcaption><span class="protein">3rjs_A</span><span class="protein-desc">Dynein light-chain protein &middot;&nbsp;89&nbsp;aa</span></figcaption>
-        </figure>
 
-        <figure class="video-card">
-          <div class="video-frame">
-            <video src="static/videos/7r79_C_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="7r79_C: sampled trajectory"></video>
-            <div class="video-missing"><strong>Video coming soon</strong><code>7r79_C_traj_sample.mp4</code></div>
-          </div>
-          <figcaption><span class="protein">7r79_C</span><span class="protein-desc">Calcium-binding protein &middot;&nbsp;78&nbsp;aa</span></figcaption>
-        </figure>
-
-      </div>
-      <p class="teaser-caption">
-        Samples from the learned EB-FM prior, aligned to ground-truth molecular-dynamics trajectories, for four
-        ATLAS proteins. The prior is trained only on simulated 2D cryo-EM projections, one noisy image per conformation.
-      </p>
+        </div>
+      </figure>
     </div>
   </section>
 
@@ -142,11 +162,78 @@
     </div>
   </section>
 
+  <!-- Trajectory videos: web-encoded copies of the supplementary .mp4 files, in docs/static/videos/. -->
+  <section class="section" id="trajectories">
+    <div class="container wide">
+      <h2>Sampled Conformational Trajectories</h2>
+      <p class="video-caption">
+        <strong>Green is the ground-truth MD simulation; blue is prior samples from EB-FM.</strong>
+        The samples are aligned to the ground-truth molecular-dynamics trajectories for four proteins. The prior is
+        trained only on simulated 2D cryo-EM projections, one noisy image per conformation.
+      </p>
+      <div class="video-grid">
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/1a62_A_traj_sample.mp4" width="1532" height="720" loop muted playsinline preload="metadata" disablepictureinpicture aria-label="1a62_A: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>1a62_A_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">1a62_A</span><span class="protein-desc">Transcription termination factor Rho</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/1egw_C_traj_sample.mp4" width="1532" height="720" loop muted playsinline preload="metadata" disablepictureinpicture aria-label="1egw_C: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>1egw_C_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">1egw_C</span><span class="protein-desc">Myocyte-specific enhancer factor 2A</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/3rjs_A_traj_sample.mp4" width="1532" height="720" loop muted playsinline preload="metadata" disablepictureinpicture aria-label="3rjs_A: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>3rjs_A_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">3rjs_A</span><span class="protein-desc">Dynein light-chain protein</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/7r79_C_traj_sample.mp4" width="1532" height="720" loop muted playsinline preload="metadata" disablepictureinpicture aria-label="7r79_C: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>7r79_C_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">7r79_C</span><span class="protein-desc">Calcium-binding protein</span></figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
   <section class="section" id="benchmarks">
     <div class="container">
       <h2>Controlled Benchmarks</h2>
 
       <h3>Two moons</h3>
+      <p>
+        We sample 2D points <span class="math"><i>z<sub>i</sub></i>&nbsp;&isin;&nbsp;&#8477;<sup>2</sup></span> and lift
+        them into a high-dimensional space
+        <span class="math"><i>x<sub>i</sub></i>&nbsp;&isin;&nbsp;&#8477;<sup><i>D</i></sup></span>
+        (<span class="math"><i>D</i>&nbsp;=&nbsp;128</span>) via a fixed random matrix
+        <span class="math"><i>P</i></span>. For each data sample, we draw a fixed random measurement matrix
+        <span class="math"><i>A<sub>i</sub></i>&nbsp;&isin;&nbsp;&#8477;<sup><i>M</i>&times;<i>D</i></sup></span> and
+        generate noisy observations
+        <span class="math"><i>y<sub>i</sub></i>&nbsp;=&nbsp;&#119964;(<i>x<sub>i</sub></i>)&nbsp;+&nbsp;<i>&epsilon;<sub>i</sub></i></span>,
+        where
+        <span class="math"><i>&epsilon;<sub>i</sub></i>&nbsp;&sim;&nbsp;&#119977;(0,&nbsp;<i>&sigma;</i><sup>2</sup><i>I<sub>M</sub></i>)</span>.
+        We test two forward operators: a linear model
+        <span class="math">&#119964;(<i>x<sub>i</sub></i>)&nbsp;=&nbsp;<i>A<sub>i</sub>x<sub>i</sub></i></span> and a
+        non-linear model
+        <span class="math">&#119964;(<i>x<sub>i</sub></i>)&nbsp;=&nbsp;sin(<i>A<sub>i</sub>x<sub>i</sub></i>)</span>.
+        To evaluate performance across varying degrees of problem difficulty, we sweep the measurement dimension
+        <span class="math"><i>M</i>&nbsp;&isin;&nbsp;{128,&nbsp;64,&nbsp;32,&nbsp;16,&nbsp;8,&nbsp;4}</span>,
+        representing a transition from a fully-determined system to a highly under-determined regime
+        (<span class="math"><i>M</i>/<i>D</i>&nbsp;=&nbsp;0.03</span>).
+      </p>
       <figure class="figure">
         <a class="figure-scroll" href="static/images/two_moons.png">
           <img class="is-wide" src="static/images/two_moons.png" width="3200" height="862" loading="lazy"
@@ -165,6 +252,12 @@
       </figure>
 
       <h3>MNIST</h3>
+      <p>
+        We follow a very similar setup on MNIST: the data are images with
+        <span class="math"><i>D</i>&nbsp;=&nbsp;784</span> pixels, and each observation is a random projection of the
+        image to <span class="math"><i>M</i>&nbsp;=&nbsp;100</span> or
+        <span class="math"><i>M</i>&nbsp;=&nbsp;50</span> measurements.
+      </p>
       <figure class="figure">
         <a class="figure-scroll" href="static/images/mnist_samples.png">
           <img class="is-wide" src="static/images/mnist_samples.png" width="2310" height="304" loading="lazy"
@@ -186,8 +279,9 @@
       <h2>Cryo-EM Heterogeneity in Atomic-Coordinate Space</h2>
       <p>
         We apply EB-FM to recovering the distribution of 3D protein conformations from noisy 2D cryo-EM projections,
-        directly in atomic-coordinate space. Each of four ATLAS proteins has a molecular-dynamics ensemble of 10,000
-        conformations, observed through a single simulated projection image per conformation.
+        directly in atomic-coordinate space. The data come from molecular-dynamics (MD) simulations: each of four
+        proteins has an MD ensemble of 10,000 conformations, and each conformation is rendered with
+        TEM-simulator to obtain a single simulated cryo-EM image.
       </p>
       <figure class="figure">
         <a class="figure-scroll" href="static/images/protein_samples.png">
@@ -195,23 +289,12 @@
                alt="For 1a62_A, 1egw_C, 3rjs_A and 7r79_C, two ground-truth states in green next to the closest prior sample in cyan and their superposition, with RMSDs from 0.511 to 3.012 angstroms.">
         </a>
         <figcaption>
-          <strong>Unconditional EB-FM samples on four ATLAS proteins, compared to ground-truth MD conformations.</strong>
+          <strong>Unconditional EB-FM samples on four proteins, compared to ground-truth MD conformations.</strong>
           For each protein we show two ground-truth states selected to span the conformational change in the ensemble.
           Green: ground-truth. Cyan: the closest unconditional sample from the learned prior. Each pair is also shown
-          superimposed with the corresponding RMSD. Animations of aligned trajectories are shown at the top of this
-          page.
+          superimposed with the corresponding RMSD.
         </figcaption>
       </figure>
-
-      <h3>Distributional accuracy</h3>
-      <p>
-        We compare the generated ensemble with the ground-truth MD ensemble using the Earth Mover&rsquo;s Distance with
-        RMSD as the ground metric (EMD-RMSD): 10,000 structures from each ensemble are matched one-to-one with the
-        Hungarian algorithm, and the RMSD is averaged over the matched pairs. Across the four proteins, EB-FM reaches
-        an EMD-RMSD between <strong>1.40&nbsp;&Aring;</strong> and <strong>6.22&nbsp;&Aring;</strong>:
-        1.40&nbsp;&Aring; on 3rjs_A, 1.62&nbsp;&Aring; on 1a62_A, 3.19&nbsp;&Aring; on 7r79_C and 6.22&nbsp;&Aring; on
-        1egw_C, the most flexible of the four.
-      </p>
     </div>
   </section>
 
