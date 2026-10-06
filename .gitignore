@@ -1,0 +1,36 @@
+# --- data (downloaded, too large for git) ---------------------------------
+data/
+
+# --- experiment outputs ---------------------------------------------------
+runs/
+wandb/
+lightning_logs/
+outputs/
+
+reports/
+
+# --- environments / caches ------------------------------------------------
+cryoflowvenv/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
+
+# --- editor ---------------------------------------------------------------
+.vscode/
+.cursor/
+.idea/
+.DS_Store
+
+# --- misc scratch ---------------------------------------------------------
+protein_chains.pkl
+temp_frames/
+temp_protein_view.html
+
+# --- local assistant config -------------------------------------------------
+CLAUDE.md
+.claude/

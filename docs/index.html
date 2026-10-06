@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Empirical Bayes Flow Matching for Continuous Cryo-EM Heterogeneity</title>
+  <meta name="description" content="EB-FM learns a flow matching prior over 3D protein conformations directly from noisy 2D cryo-EM projections, in atomic-coordinate space.">
+  <meta name="keywords" content="EB-FM, flow matching, empirical Bayes, cryo-EM, heterogeneity, protein conformations, inverse problems">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Empirical Bayes Flow Matching for Continuous Cryo-EM Heterogeneity">
+  <meta property="og:description" content="EB-FM learns a flow matching prior over 3D protein conformations directly from noisy 2D cryo-EM projections, in atomic-coordinate space.">
+  <meta property="og:image" content="https://daiyral.github.io/Empirical-Bayes-Flow-Matching-for-Continuous-Cryo-EM-Heterogeneity/static/images/method_overview.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2322272e'/%3E%3Cpath d='M6 21c4-12 7 8 10-4s6 6 10-6' fill='none' stroke='%2334d399' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="static/css/index.css">
+</head>
+<body>
+
+  <header class="hero">
+    <div class="container">
+      <h1 class="title">Empirical Bayes Flow Matching for Continuous Cryo-EM Heterogeneity</h1>
+
+      <ul class="authors">
+        <li>Daniel Aibinder</li>
+        <li>Azmi Haider</li>
+        <li>Dan Rosenbaum</li>
+      </ul>
+      <p class="venue">Preprint</p>
+
+      <nav class="links" aria-label="Project links">
+        <!-- When the paper is online, replace this <span> with:
+             <a class="button" href="https://arxiv.org/abs/XXXX.XXXXX"> ...same icon... <span>Paper</span></a> -->
+        <span class="button is-disabled" aria-disabled="true">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zm7 1.5V9h5.5L13 3.5zM8 13v1.5h8V13H8zm0 3.5V18h8v-1.5H8z"/></svg>
+          <span>Paper <small>(coming soon)</small></span>
+        </span>
+        <a class="button" href="https://github.com/daiyral/Empirical-Bayes-Flow-Matching-for-Continuous-Cryo-EM-Heterogeneity">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.09 0 4.42-2.69 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5z"/></svg>
+          <span>Code</span>
+        </a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Trajectory videos: drop the four .mp4 files into docs/static/videos/ with exactly these names. -->
+  <section class="teaser" aria-label="Sampled conformational trajectories">
+    <div class="container wide">
+      <div class="video-grid">
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/1a62_A_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="1a62_A: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>1a62_A_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">1a62_A</span><span class="protein-desc">Transcription termination factor Rho &middot;&nbsp;130&nbsp;aa</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/1egw_C_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="1egw_C: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>1egw_C_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">1egw_C</span><span class="protein-desc">Myocyte-specific enhancer factor 2A &middot;&nbsp;79&nbsp;aa</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/3rjs_A_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="3rjs_A: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>3rjs_A_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">3rjs_A</span><span class="protein-desc">Dynein light-chain protein &middot;&nbsp;89&nbsp;aa</span></figcaption>
+        </figure>
+
+        <figure class="video-card">
+          <div class="video-frame">
+            <video src="static/videos/7r79_C_traj_sample.mp4" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="7r79_C: sampled trajectory"></video>
+            <div class="video-missing"><strong>Video coming soon</strong><code>7r79_C_traj_sample.mp4</code></div>
+          </div>
+          <figcaption><span class="protein">7r79_C</span><span class="protein-desc">Calcium-binding protein &middot;&nbsp;78&nbsp;aa</span></figcaption>
+        </figure>
+
+      </div>
+      <p class="teaser-caption">
+        Samples from the learned EB-FM prior, aligned to ground-truth molecular-dynamics trajectories, for four
+        ATLAS proteins. The prior is trained only on simulated 2D cryo-EM projections, one noisy image per conformation.
+      </p>
+    </div>
+  </section>
+
+  <section class="section alt" id="abstract">
+    <div class="container">
+      <h2>Abstract</h2>
+      <p class="abstract">
+        We address the problem of learning generative priors over high-dimensional latent variables from indirect,
+        noisy observations, with a focus on continuous heterogeneity in cryo-electron microscopy (cryo-EM). In this
+        setting, 3D atomic structures <span class="math"><i>x</i>&nbsp;&isin;&nbsp;&#8477;<sup>3<i>N<sub>a</sub></i></sup></span>
+        are never directly observed and must be inferred from 2D projection images <span class="math"><i>y</i></span>
+        generated by a complex, non-linear forward operator. We propose Empirical Bayes Flow Matching (EB-FM), a
+        method that learns a flow matching prior <span class="math"><i>p<sub>&theta;</sub></i>(<i>x</i>)</span> directly
+        from observations using a Monte Carlo stochastic approximation Expectation-Maximization framework. EB-FM
+        alternates between an E-step that performs approximate posterior sampling from
+        <span class="math"><i>p<sub>&theta;</sub></i>(<i>x</i>&nbsp;|&nbsp;<i>y</i>)</span> via guided flow-based
+        generation while maintaining persistent latent estimates through stochastic approximation, and an M-step that
+        updates the flow model using these stabilized latent variables as training targets. This approach eliminates
+        the need for pretraining on clean data and naturally accommodates non-linear forward models. We validate our
+        method on controlled inverse problems using two-moons and MNIST data, and demonstrate its effectiveness on
+        simulated cryo-EM data with known poses, showing that EB-FM can recover continuous distributions of protein
+        conformations directly in atomic-coordinate space.
+      </p>
+    </div>
+  </section>
+
+  <section class="section" id="method">
+    <div class="container">
+      <h2>Method</h2>
+      <p>
+        EB-FM learns a flow matching prior over atomic structures from indirect observations by iteratively inverting
+        the forward model during training, formulated as a Monte Carlo stochastic approximation
+        Expectation-Maximization algorithm.
+      </p>
+      <figure class="figure">
+        <a class="figure-scroll" href="static/images/method_overview.png">
+          <img src="static/images/method_overview.png" width="2167" height="1162" loading="lazy"
+               alt="Diagram of EB-FM. E-step: a flow model maps a harmonic-prior sample to a denoised structure, which is rendered and compared with the observed image to guide sampling and update the persistent latent. M-step: the flow model is trained by flow matching on the latents.">
+        </a>
+        <figcaption>
+          <strong>Overview of EB-FM, illustrated for the cryo-EM setting.</strong>
+          Each observation <span class="math"><i>y<sub>i</sub></i></span> is associated with a persistent latent
+          <span class="math"><i>x&#771;<sub>i</sub></i></span> that tracks the posterior mean. In the E-step, the current
+          flow matching prior <span class="math"><i>p<sub>&theta;</sub></i>(<i>x</i>)</span> generates a posterior sample
+          <span class="math"><i>x&#770;<sub>i</sub></i></span> via gradient-based guidance through the differentiable
+          forward operator <span class="math"><i>A</i></span>, and <span class="math"><i>x&#771;<sub>i</sub></i></span>
+          is updated by EMA. In the M-step, the prior is trained by conditional flow matching on the persistent latents
+          <span class="math">{<i>x&#771;<sub>i</sub></i>}</span> in place of clean data.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="benchmarks">
+    <div class="container">
+      <h2>Controlled Benchmarks</h2>
+
+      <h3>Two moons</h3>
+      <figure class="figure">
+        <a class="figure-scroll" href="static/images/two_moons.png">
+          <img class="is-wide" src="static/images/two_moons.png" width="3200" height="862" loading="lazy"
+               alt="Grid of two-moons samples for DiEM-iso, EB-FM without persistent latents and EB-FM, for linear and sine forward operators and measurement dimensions M from 128 down to 4.">
+        </a>
+        <figcaption>
+          <strong>Two-moons benchmark for linear and non-linear forward operators, across decreasing measurement
+          dimensions <span class="math"><i>M</i></span>.</strong>
+          Each panel shows samples from the learned prior projected back to 2D. DiEM-iso (top) is sharp at high
+          <span class="math"><i>M</i></span> but its linearized CG solver collapses by
+          <span class="math"><i>M</i>=32</span> under increasing uncertainty. EB-FM without persistent latents (middle)
+          preserves the manifold further into the under-determined regime but loses structure by
+          <span class="math"><i>M</i>=8</span>. EB-FM with persistent latents (bottom) is the only method that recovers
+          the two moons at <span class="math"><i>M</i>=8</span>.
+        </figcaption>
+      </figure>
+
+      <h3>MNIST</h3>
+      <figure class="figure">
+        <a class="figure-scroll" href="static/images/mnist_samples.png">
+          <img class="is-wide" src="static/images/mnist_samples.png" width="2310" height="304" loading="lazy"
+               alt="Two rows of generated handwritten digits for M=100 and for M=50 measurements per image.">
+        </a>
+        <figcaption>
+          <strong>Unconditional samples from the EB-FM prior.</strong>
+          784-dimensional MNIST observed only through random Gaussian projections. Left:
+          <span class="math"><i>M</i>=100</span> measurements per image. Right: <span class="math"><i>M</i>=50</span>.
+          The model never sees clean digits during training, yet recovers digit structure from the indirect
+          observations.
+        </figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" id="cryo-em">
+    <div class="container">
+      <h2>Cryo-EM Heterogeneity in Atomic-Coordinate Space</h2>
+      <p>
+        We apply EB-FM to recovering the distribution of 3D protein conformations from noisy 2D cryo-EM projections,
+        directly in atomic-coordinate space. Each of four ATLAS proteins has a molecular-dynamics ensemble of 10,000
+        conformations, observed through a single simulated projection image per conformation.
+      </p>
+      <figure class="figure">
+        <a class="figure-scroll" href="static/images/protein_samples.png">
+          <img src="static/images/protein_samples.png" width="2600" height="1905" loading="lazy"
+               alt="For 1a62_A, 1egw_C, 3rjs_A and 7r79_C, two ground-truth states in green next to the closest prior sample in cyan and their superposition, with RMSDs from 0.511 to 3.012 angstroms.">
+        </a>
+        <figcaption>
+          <strong>Unconditional EB-FM samples on four ATLAS proteins, compared to ground-truth MD conformations.</strong>
+          For each protein we show two ground-truth states selected to span the conformational change in the ensemble.
+          Green: ground-truth. Cyan: the closest unconditional sample from the learned prior. Each pair is also shown
+          superimposed with the corresponding RMSD. Animations of aligned trajectories are shown at the top of this
+          page.
+        </figcaption>
+      </figure>
+
+      <h3>Distributional accuracy</h3>
+      <p>
+        We compare the generated ensemble with the ground-truth MD ensemble using the Earth Mover&rsquo;s Distance with
+        RMSD as the ground metric (EMD-RMSD): 10,000 structures from each ensemble are matched one-to-one with the
+        Hungarian algorithm, and the RMSD is averaged over the matched pairs. Across the four proteins, EB-FM reaches
+        an EMD-RMSD between <strong>1.40&nbsp;&Aring;</strong> and <strong>6.22&nbsp;&Aring;</strong>:
+        1.40&nbsp;&Aring; on 3rjs_A, 1.62&nbsp;&Aring; on 1a62_A, 3.19&nbsp;&Aring; on 7r79_C and 6.22&nbsp;&Aring; on
+        1egw_C, the most flexible of the four.
+      </p>
+    </div>
+  </section>
+
+  <section class="section alt" id="bibtex">
+    <div class="container">
+      <h2>BibTeX</h2>
+      <div class="bibtex">
+        <button type="button" class="copy-button" data-copy-target="bibtex-entry">Copy</button>
+<pre><code id="bibtex-entry">@misc{aibinder2026ebfm,
+  title  = {Empirical Bayes Flow Matching for Continuous Cryo-EM Heterogeneity},
+  author = {Aibinder, Daniel and Haider, Azmi and Rosenbaum, Dan},
+  year   = {2026},
+  note   = {Preprint}
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <p>
+        Page layout follows the
+        <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> academic project page.
+      </p>
+    </div>
+  </footer>
+
+  <script src="static/js/index.js"></script>
+</body>
+</html>
