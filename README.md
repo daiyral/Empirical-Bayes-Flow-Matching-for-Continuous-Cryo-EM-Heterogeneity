@@ -61,16 +61,17 @@ manual and example inputs. Install it following the instructions there, then put
 `TEM-simulator` executable on your `PATH` (or set `TEM_SIMULATOR=/path/to/TEM-simulator`) so
 `tools/simulate_cryo_em.py` finds it.
 
-A TEM-simulator input file must be given with `--tem_input`; start from one of the examples
-on the site. The simulation parameters we used are listed in the paper. The script fills in
-the per-frame paths, so write `pdb_file_in`, `coord_file_out` and `image_file_out` as
-`PDB_FILE_PLACEHOLDER`, `COORD_FILE_PLACEHOLDER` and `MRC_FILE_PLACEHOLDER`.
+A TEM-simulator input file must be given with `--tem_input`.
+[tools/tem_template.txt](tools/tem_template.txt) is an example input; other example inputs are
+available on the TEM-simulator site.
+The script fills in the per-frame paths, so write `pdb_file_in`, `coord_file_out` and
+`image_file_out` as `PDB_FILE_PLACEHOLDER`, `COORD_FILE_PLACEHOLDER` and `MRC_FILE_PLACEHOLDER`.
 
 ```bash
 python tools/simulate_cryo_em.py \
   --pdb_file data/md/1a62_A/1a62_A.pdb \
   --xtc_file data/md/1a62_A/1a62_A_prod_R1_fit.xtc \
-  --tem_input my_tem_input.txt \
+  --tem_input tools/tem_template.txt \
   --output_dir "$CRYO_DATASET_ROOT/1a62_A_sim_output"
 ```
 

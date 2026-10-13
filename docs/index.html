@@ -57,43 +57,123 @@
   <section class="teaser" aria-label="EB-FM pipeline overview">
     <div class="container wide">
       <figure class="pipeline">
-        <figcaption class="pipeline-title"><b>EB-FM</b> pipeline for 2D cryo-EM images to 3D atom ensembles</figcaption>
-        <div class="pipeline-flow">
+        <figcaption class="pipeline-title"><b>EB-FM</b> learns a prior over 3D atom ensembles from 2D cryo-EM images</figcaption>
+        <div class="pipeline-flow" role="img" aria-label="The prior, drawn as a neural network whose edge weights keep changing as it trains, generates 3D atoms by flow matching: a cloud of blue points that slowly turns into a moving protein structure. The output is rendered into a cryo-EM image, which is compared with an image from the cryo-EM dataset and grows more similar to it. A faint red arrow labelled gradient leads from the comparison back to the flow matching step.">
 
-          <div class="pipeline-stage pipeline-in">
-            <div class="particles" role="img" aria-label="Twelve noisy 2D cryo-EM projection images of a protein">
-              <span class="particle" style="--c:0;--r:0;--i:0"></span>
-              <span class="particle" style="--c:1;--r:0;--i:5"></span>
-              <span class="particle" style="--c:2;--r:0;--i:10"></span>
-              <span class="particle" style="--c:3;--r:0;--i:3"></span>
-              <span class="particle" style="--c:0;--r:1;--i:8"></span>
-              <span class="particle" style="--c:1;--r:1;--i:1"></span>
-              <span class="particle" style="--c:2;--r:1;--i:6"></span>
-              <span class="particle" style="--c:3;--r:1;--i:11"></span>
-              <span class="particle" style="--c:0;--r:2;--i:4"></span>
-              <span class="particle" style="--c:1;--r:2;--i:9"></span>
-              <span class="particle" style="--c:2;--r:2;--i:2"></span>
-              <span class="particle" style="--c:3;--r:2;--i:7"></span>
-            </div>
-            <p class="pipeline-label">2D cryo-EM images</p>
+          <div class="pipeline-stage stage-net">
+              <svg class="nn" viewBox="0 0 150 170" aria-hidden="true">
+                <g class="nn-edges">
+                  <path d="M16 49L55 31"/>
+                  <path d="M16 49L55 67"/>
+                  <path d="M16 49L55 103"/>
+                  <path d="M16 49L55 139"/>
+                  <path d="M16 85L55 31"/>
+                  <path d="M16 85L55 67"/>
+                  <path d="M16 85L55 103"/>
+                  <path d="M16 85L55 139"/>
+                  <path d="M16 121L55 31"/>
+                  <path d="M16 121L55 67"/>
+                  <path d="M16 121L55 103"/>
+                  <path d="M16 121L55 139"/>
+                  <path d="M55 31L95 31"/>
+                  <path d="M55 31L95 67"/>
+                  <path d="M55 31L95 103"/>
+                  <path d="M55 31L95 139"/>
+                  <path d="M55 67L95 31"/>
+                  <path d="M55 67L95 67"/>
+                  <path d="M55 67L95 103"/>
+                  <path d="M55 67L95 139"/>
+                  <path d="M55 103L95 31"/>
+                  <path d="M55 103L95 67"/>
+                  <path d="M55 103L95 103"/>
+                  <path d="M55 103L95 139"/>
+                  <path d="M55 139L95 31"/>
+                  <path d="M55 139L95 67"/>
+                  <path d="M55 139L95 103"/>
+                  <path d="M55 139L95 139"/>
+                  <path d="M95 31L134 49"/>
+                  <path d="M95 31L134 85"/>
+                  <path d="M95 31L134 121"/>
+                  <path d="M95 67L134 49"/>
+                  <path d="M95 67L134 85"/>
+                  <path d="M95 67L134 121"/>
+                  <path d="M95 103L134 49"/>
+                  <path d="M95 103L134 85"/>
+                  <path d="M95 103L134 121"/>
+                  <path d="M95 139L134 49"/>
+                  <path d="M95 139L134 85"/>
+                  <path d="M95 139L134 121"/>
+                </g>
+                <g class="nn-edges is-weighted">
+                  <path d="M16 49L55 31"/>
+                  <path d="M16 121L55 139"/>
+                  <path d="M55 31L95 67"/>
+                  <path d="M55 103L95 67"/>
+                  <path d="M55 139L95 103"/>
+                  <path d="M95 31L134 49"/>
+                  <path d="M95 139L134 121"/>
+                </g>
+                <g class="nn-signals">
+                  <path d="M16 49L55 31" pathLength="1"/>
+                  <path d="M16 49L55 67" pathLength="1"/>
+                  <path d="M16 49L55 103" pathLength="1"/>
+                  <path d="M16 49L55 139" pathLength="1"/>
+                  <path d="M16 85L55 31" pathLength="1"/>
+                  <path d="M16 85L55 67" pathLength="1"/>
+                  <path d="M16 85L55 103" pathLength="1"/>
+                  <path d="M16 85L55 139" pathLength="1"/>
+                  <path d="M16 121L55 31" pathLength="1"/>
+                  <path d="M16 121L55 67" pathLength="1"/>
+                  <path d="M16 121L55 103" pathLength="1"/>
+                  <path d="M16 121L55 139" pathLength="1"/>
+                  <path d="M55 31L95 31" pathLength="1"/>
+                  <path d="M55 31L95 67" pathLength="1"/>
+                  <path d="M55 31L95 103" pathLength="1"/>
+                  <path d="M55 31L95 139" pathLength="1"/>
+                  <path d="M55 67L95 31" pathLength="1"/>
+                  <path d="M55 67L95 67" pathLength="1"/>
+                  <path d="M55 67L95 103" pathLength="1"/>
+                  <path d="M55 67L95 139" pathLength="1"/>
+                  <path d="M55 103L95 31" pathLength="1"/>
+                  <path d="M55 103L95 67" pathLength="1"/>
+                  <path d="M55 103L95 103" pathLength="1"/>
+                  <path d="M55 103L95 139" pathLength="1"/>
+                  <path d="M55 139L95 31" pathLength="1"/>
+                  <path d="M55 139L95 67" pathLength="1"/>
+                  <path d="M55 139L95 103" pathLength="1"/>
+                  <path d="M55 139L95 139" pathLength="1"/>
+                  <path d="M95 31L134 49" pathLength="1"/>
+                  <path d="M95 31L134 85" pathLength="1"/>
+                  <path d="M95 31L134 121" pathLength="1"/>
+                  <path d="M95 67L134 49" pathLength="1"/>
+                  <path d="M95 67L134 85" pathLength="1"/>
+                  <path d="M95 67L134 121" pathLength="1"/>
+                  <path d="M95 103L134 49" pathLength="1"/>
+                  <path d="M95 103L134 85" pathLength="1"/>
+                  <path d="M95 103L134 121" pathLength="1"/>
+                  <path d="M95 139L134 49" pathLength="1"/>
+                  <path d="M95 139L134 85" pathLength="1"/>
+                  <path d="M95 139L134 121" pathLength="1"/>
+                </g>
+                <g class="nn-weights">
+                  <text x="35.5" y="40">+0.42</text>
+                  <text x="35.5" y="130">&minus;1.31</text>
+                  <text x="75" y="49">&minus;0.07</text>
+                  <text x="75" y="85">+0.88</text>
+                  <text x="75" y="121">+1.16</text>
+                  <text x="114.5" y="40">&minus;0.53</text>
+                  <text x="114.5" y="130">+0.29</text>
+                </g>
+                <g class="nn-layer" style="--l:0"><circle cx="16" cy="49" r="7.5"/><circle cx="16" cy="85" r="7.5"/><circle cx="16" cy="121" r="7.5"/></g>
+                <g class="nn-layer" style="--l:1"><circle cx="55" cy="31" r="7.5"/><circle cx="55" cy="67" r="7.5"/><circle cx="55" cy="103" r="7.5"/><circle cx="55" cy="139" r="7.5"/></g>
+                <g class="nn-layer" style="--l:2"><circle cx="95" cy="31" r="7.5"/><circle cx="95" cy="67" r="7.5"/><circle cx="95" cy="103" r="7.5"/><circle cx="95" cy="139" r="7.5"/></g>
+                <g class="nn-layer" style="--l:3"><circle cx="134" cy="49" r="7.5"/><circle cx="134" cy="85" r="7.5"/><circle cx="134" cy="121" r="7.5"/></g>
+              </svg>
+            <p class="pipeline-label">Prior</p>
           </div>
 
-          <div class="pipeline-arrow" aria-hidden="true">
-            <div class="track track-in">
-              <span class="packet" style="--c:0;--r:0;--i:0"></span>
-              <span class="packet" style="--c:1;--r:0;--i:5"></span>
-              <span class="packet" style="--c:2;--r:0;--i:10"></span>
-              <span class="packet" style="--c:3;--r:0;--i:3"></span>
-              <span class="packet" style="--c:0;--r:1;--i:8"></span>
-              <span class="packet" style="--c:1;--r:1;--i:1"></span>
-              <span class="packet" style="--c:2;--r:1;--i:6"></span>
-              <span class="packet" style="--c:3;--r:1;--i:11"></span>
-              <span class="packet" style="--c:0;--r:2;--i:4"></span>
-              <span class="packet" style="--c:1;--r:2;--i:9"></span>
-              <span class="packet" style="--c:2;--r:2;--i:2"></span>
-              <span class="packet" style="--c:3;--r:2;--i:7"></span>
-            </div>
-            <span class="node">EB-FM</span>
+          <div class="pipeline-arrow">
+            <span class="arrow-label">flow matching</span>
             <div class="track track-out">
               <span class="atom" style="--i:0"></span>
               <span class="atom" style="--i:1"></span>
@@ -102,9 +182,47 @@
             </div>
           </div>
 
-          <div class="pipeline-stage pipeline-out">
-            <video class="pipeline-video" src="static/videos/eb_fm_ensemble.mp4?v=5" poster="static/images/eb_fm_ensemble_poster.jpg" width="520" height="620" autoplay loop muted playsinline preload="auto" disablepictureinpicture aria-label="3D atomic structure of the protein moving through the conformations of the recovered ensemble"></video>
-            <p class="pipeline-label">3D atom ensemble</p>
+          <div class="pipeline-stage stage-sample">
+            <div class="sample">
+              <video class="pipeline-video" src="static/videos/eb_fm_ensemble.mp4?v=5" poster="static/images/eb_fm_ensemble_poster.jpg" width="520" height="620" autoplay loop muted playsinline preload="auto" disablepictureinpicture></video>
+              <canvas class="sample-canvas" width="260" height="310"></canvas>
+            </div>
+            <p class="pipeline-label">3D atoms</p>
+          </div>
+
+          <div class="pipeline-arrow">
+            <span class="arrow-label">render</span>
+            <div class="track track-out">
+              <span class="atom" style="--i:0"></span>
+              <span class="atom" style="--i:1"></span>
+              <span class="atom" style="--i:2"></span>
+              <span class="atom" style="--i:3"></span>
+            </div>
+          </div>
+
+          <div class="pipeline-compare">
+            <div class="pipeline-stage shot">
+              <canvas class="render-canvas" width="64" height="64"></canvas>
+              <p class="pipeline-label">Rendered image</p>
+            </div>
+            <div class="compare"><i></i><span class="pill">compare</span><i></i></div>
+            <div class="pipeline-stage shot">
+              <div class="dataset">
+                <span style="--c:0;--r:0;--i:0"></span>
+                <span style="--c:1;--r:1;--i:1"></span>
+                <span style="--c:2;--r:2;--i:2"></span>
+                <span style="--c:3;--r:0;--i:3"></span>
+                <span style="--c:0;--r:2;--i:4"></span>
+                <span style="--c:1;--r:0;--i:5"></span>
+                <span style="--c:2;--r:1;--i:6"></span>
+                <span style="--c:3;--r:2;--i:7"></span>
+                <span style="--c:0;--r:1;--i:8"></span>
+                <span style="--c:1;--r:2;--i:9"></span>
+                <span style="--c:2;--r:0;--i:10"></span>
+                <span style="--c:3;--r:1;--i:11"></span>
+              </div>
+              <p class="pipeline-label">Dataset image</p>
+            </div>
           </div>
 
         </div>

@@ -139,11 +139,11 @@ a:hover {
 /* black, to match the background the ensemble video was rendered on */
 .pipeline {
   --cyan: #19e0e0;
-  /* how long each cryo-EM image stays selected; the whole image cycle scales with it */
-  --step: 1.1s;
+  --wire: #6b7682;
+  /* feedback: kept dim so it does not compete with the forward flow */
+  --grad: #8f4541;
   --flow-x: 1;
   --flow-y: 0;
-  --flow-dir: 90deg;
   max-width: 1120px;
   margin: 0 auto;
   padding: clamp(1.25rem, 3.2vw, 2.25rem) clamp(1rem, 3.2vw, 2.75rem);
@@ -167,10 +167,17 @@ a:hover {
   font-weight: 700;
 }
 
+/* stages share one height: each picture centres itself in it, and the labels line up along the bottom */
 .pipeline-flow {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: clamp(0.6rem, 1.6vw, 1.25rem);
+  align-items: stretch;
+  gap: clamp(0.5rem, 1.3vw, 1rem);
+}
+
+/* room above the row for the feedback arrow, once the script has drawn it */
+.pipeline-flow.has-feedback {
+  padding-top: 2.2rem;
 }
 
 .pipeline-stage {
@@ -181,60 +188,249 @@ a:hover {
   min-width: 0;
 }
 
-/* a 4:3 grid at 40% is as tall as the 520:620 video at 25.2%, so the two labels line up */
-.pipeline-in {
-  flex: 0 1 40%;
-}
-
-.pipeline-out {
-  flex: 0 1 25.2%;
-}
-
 .pipeline-label {
   margin: 0;
   color: #98a2ad;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   line-height: 1.3;
   text-align: center;
+  white-space: nowrap;
 }
 
-.particles {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: clamp(3px, 0.5vw, 6px);
+/* neural net */
+
+.stage-net {
+  flex: 0 1 17%;
+}
+
+.nn {
+  display: block;
   width: 100%;
+  height: auto;
+  margin: auto 0;
+  overflow: visible;
 }
 
-/* one 4x3 sprite; --c / --r pick the tile */
-.particle,
-.packet::before {
+.nn path {
+  fill: none;
+}
+
+.nn-edges path {
+  stroke: #2c353e;
+  stroke-width: 1;
+}
+
+/* the edges that carry a number stand out a little */
+.nn-edges.is-weighted path {
+  stroke: #56626e;
+}
+
+/* weights, written on those edges; the black outline blanks the lines behind the digits */
+.nn-weights text {
+  fill: #dfe5ea;
+  stroke: #000;
+  stroke-width: 3.5px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+  transition: fill 0.6s;
+}
+
+/* tinted like the gradient arrow while training is still moving them */
+.nn-weights.is-updating text {
+  fill: #cf8a85;
+}
+
+/* one short dash per edge, travelling towards the output */
+.nn-signals path {
+  stroke: var(--cyan);
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-dasharray: 0.16 0.84;
+  opacity: 0.8;
+  animation: nn-signal 2.4s linear infinite;
+}
+
+.nn-signals path:nth-child(3n) {
+  animation-delay: -0.8s;
+}
+
+.nn-signals path:nth-child(3n + 1) {
+  animation-delay: -1.6s;
+}
+
+.nn-layer circle {
+  fill: #031516;
+  stroke: var(--cyan);
+  stroke-width: 1.6;
+  animation: nn-pulse 2.4s ease-in-out calc(var(--l) * 0.4s) infinite;
+}
+
+/* 3D output: the video, and the canvas that shows it as noise turning into structure */
+
+.stage-sample {
+  flex: 0 1 21%;
+}
+
+/* a little shorter than the video, whose top and bottom strips are always empty */
+.sample {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 520 / 556;
+  overflow: hidden;
+}
+
+.pipeline-video,
+.sample-canvas {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  display: block;
+  width: 100%;
+  height: auto;
+  transform: translateY(-50%);
+}
+
+.sample-canvas {
+  aspect-ratio: 260 / 310;
+}
+
+/* rendered image vs dataset image */
+
+.pipeline-compare {
+  display: flex;
+  flex: 0 1 40%;
+  align-items: stretch;
+  gap: clamp(0.35rem, 0.9vw, 0.7rem);
+  min-width: 0;
+}
+
+.shot {
+  flex: 1 1 0;
+}
+
+.render-canvas,
+.dataset {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  margin: auto 0;
+  border-radius: 5px;
+  background: #868686;
+}
+
+/* the offset shadows make it one image off a stack */
+.dataset {
+  position: relative;
+  box-shadow: 5px -5px 0 -1px #262b31, 10px -10px 0 -2px #16191d;
+}
+
+/* one 4x3 sprite; --c / --r pick the tile. The script shows them in turn; without it the first one stays up */
+.dataset span {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  opacity: 0;
   background: url("../images/cryoem_particles.png") calc(var(--c) * 100% / 3) calc(var(--r) * 50%) / 400% 300% no-repeat;
 }
 
-/* --i is the tile's turn in the 12-step cycle; its .packet leaves on the same beat */
-.particle {
-  aspect-ratio: 1;
-  border-radius: 5px;
-  filter: brightness(0.8);
-  animation:
-    pipeline-pop 0.55s cubic-bezier(0.2, 0.7, 0.2, 1) calc(var(--i) * 70ms) both,
-    particle-pick calc(var(--step) * 12) linear calc(1.6s + var(--i) * var(--step)) infinite;
+.dataset span:first-child {
+  opacity: 1;
 }
 
+.compare {
+  position: relative;
+  display: flex;
+  flex: none;
+  align-items: center;
+  align-self: center;
+  justify-content: center;
+  width: 5.6rem;
+  height: 2.6rem;
+  /* centre on the images rather than on images + label */
+  margin-bottom: 1.85rem;
+}
+
+.compare::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 7px;
+  left: 7px;
+  height: 2px;
+  margin-top: -1px;
+  background: var(--wire);
+}
+
+.compare i {
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 12px;
+  margin-top: -6px;
+  background: var(--wire);
+}
+
+.compare i:first-child {
+  left: 0;
+  clip-path: polygon(100% 0, 0 50%, 100% 100%);
+}
+
+.compare i:last-child {
+  right: 0;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.pill {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  padding: 0.26rem 0.7rem;
+  border: 1.5px solid var(--wire);
+  border-radius: 999px;
+  background: #0b0e11;
+  color: #c9d1d9;
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
+}
+
+/* arrows */
+
 .pipeline-arrow {
+  position: relative;
   display: flex;
   flex: 1 1 0;
   align-items: center;
-  min-width: 8.5rem;
-  /* centre on the images rather than on images + label */
-  margin-bottom: 1.9rem;
+  align-self: center;
+  min-width: 4.5rem;
+  /* centre on the pictures rather than on pictures + label */
+  margin-bottom: 1.85rem;
+}
+
+/* sits above its arrow, and may be wider than it */
+.arrow-label {
+  position: absolute;
+  bottom: calc(50% + 0.8rem);
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--cyan);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+  white-space: nowrap;
 }
 
 .track {
   position: relative;
   flex: 1 1 0;
   height: 2.6rem;
-  animation: pipeline-fade 0.5s both;
 }
 
 .track::before {
@@ -245,23 +441,11 @@ a:hover {
   left: 0;
   height: 3px;
   margin-top: -1.5px;
-}
-
-.track-in {
-  animation-delay: 1s;
-}
-
-.track-in::before {
-  background: repeating-linear-gradient(var(--flow-dir), #6b7682 0 7px, transparent 7px 14px);
-}
-
-.track-out {
-  animation-delay: 1.6s;
+  background: var(--cyan);
 }
 
 .track-out::before {
   right: 12px;
-  background: var(--cyan);
 }
 
 .track-out::after {
@@ -276,59 +460,20 @@ a:hover {
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
-.node {
-  position: relative;
-  z-index: 1;
-  flex: none;
-  padding: 0.4rem 1.05rem;
-  border: 2px solid var(--cyan);
-  border-radius: 999px;
-  background: #031516;
-  color: var(--cyan);
-  font-size: 1.1rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  line-height: 1.3;
-  white-space: nowrap;
-  animation:
-    pipeline-fade 0.5s 1.3s both,
-    node-glow 1.6s ease-in-out 1.8s infinite alternate;
-}
-
-/* each mover spans its track, so translating it by 100% carries its marker from one end to the other */
-.packet,
+/* each atom spans its track, so translating it by 100% carries its dot from one end to the other */
 .atom {
   position: absolute;
   inset: 0;
   opacity: 0;
   pointer-events: none;
+  animation: atom-travel 2s linear calc(var(--i) * 0.5s) infinite;
 }
 
-.packet {
-  animation: packet-travel calc(var(--step) * 12) linear calc(1.6s + var(--i) * var(--step)) infinite;
-}
-
-.atom {
-  animation: atom-travel 2.4s linear calc(2.1s + var(--i) * 0.6s) infinite;
-}
-
-.packet::before,
 .atom::before {
   content: "";
   position: absolute;
   top: 50%;
   left: 0;
-}
-
-.packet::before {
-  width: 2.1rem;
-  height: 2.1rem;
-  margin: -1.05rem 0 0 -1.05rem;
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.28);
-}
-
-.atom::before {
   width: 8px;
   height: 8px;
   margin: -4px 0 0 -4px;
@@ -337,56 +482,71 @@ a:hover {
   box-shadow: 0 0 8px var(--cyan);
 }
 
-.pipeline-video {
-  display: block;
+/* feedback from the comparison to the flow matching step: drawn by the script, dim red and dashed */
+.feedback {
+  position: absolute;
+  inset: 0;
   width: 100%;
-  height: auto;
-  animation: pipeline-pop 0.8s ease-out 1.9s both;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
 }
 
-@keyframes pipeline-pop {
+.feedback-line {
+  fill: none;
+  stroke: var(--grad);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 5 7;
+  animation: feedback-flow 1.4s linear infinite;
+}
+
+.feedback marker path {
+  fill: var(--grad);
+}
+
+/* a shade lighter than the line so the word stays readable; the black outline blanks the dashes behind it */
+.feedback text {
+  fill: #a65a55;
+  stroke: #000;
+  stroke-width: 10px;
+  stroke-linejoin: round;
+  paint-order: stroke;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+@keyframes feedback-flow {
   from {
-    opacity: 0;
-    transform: scale(0.82);
+    stroke-dashoffset: 12;
+  }
+
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
-@keyframes pipeline-fade {
+@keyframes nn-signal {
   from {
-    opacity: 0;
+    stroke-dashoffset: 1;
+  }
+
+  to {
+    stroke-dashoffset: 0;
   }
 }
 
-@keyframes particle-pick {
+@keyframes nn-pulse {
   0%,
-  11%,
+  50%,
   100% {
-    filter: brightness(0.8);
-    box-shadow: 0 0 0 2px rgba(25, 224, 224, 0), 0 0 14px rgba(25, 224, 224, 0);
+    fill: #031516;
   }
 
-  1.5%,
-  7% {
-    filter: brightness(1.2);
-    box-shadow: 0 0 0 2px var(--cyan), 0 0 14px rgba(25, 224, 224, 0.55);
-  }
-}
-
-@keyframes packet-travel {
-  0% {
-    opacity: 0;
-    transform: translate(0, 0);
-  }
-
-  2.5%,
-  14% {
-    opacity: 1;
-  }
-
-  17%,
-  100% {
-    opacity: 0;
-    transform: translate(calc(var(--flow-x) * 100%), calc(var(--flow-y) * 100%));
+  18% {
+    fill: #0f8f90;
   }
 }
 
@@ -407,48 +567,53 @@ a:hover {
   }
 }
 
-@keyframes node-glow {
-  from {
-    box-shadow: 0 0 0 rgba(25, 224, 224, 0);
-  }
-
-  to {
-    box-shadow: 0 0 18px rgba(25, 224, 224, 0.55);
-  }
-}
-
-/* phones: the pipeline runs top to bottom */
-@media (max-width: 719px) {
+/* narrow screens: the pipeline runs top to bottom, ending in the image pair */
+@media (max-width: 859px) {
   .pipeline {
     --flow-x: 0;
     --flow-y: 1;
-    --flow-dir: 180deg;
   }
 
   .pipeline-flow {
     flex-direction: column;
+    align-items: center;
   }
 
-  .pipeline-in,
-  .pipeline-out {
+  /* the feedback arrow runs under the image pair and up the right edge */
+  .pipeline-flow.has-feedback {
+    padding: 0 1.4rem 2.2rem;
+  }
+
+  .stage-net {
+    flex: none;
+    width: 11rem;
+  }
+
+  .stage-sample {
+    flex: none;
+    width: 15rem;
+    max-width: 100%;
+  }
+
+  .pipeline-compare {
     flex: none;
     width: 100%;
-  }
-
-  .particles {
-    max-width: 26rem;
-  }
-
-  .pipeline-video {
-    max-width: 15rem;
+    max-width: 24rem;
   }
 
   .pipeline-arrow {
     flex: none;
     flex-direction: column;
     min-width: 0;
-    height: 12rem;
-    margin: 0.5rem 0 0;
+    height: 4.6rem;
+    margin-bottom: 0;
+  }
+
+  .arrow-label {
+    top: 50%;
+    bottom: auto;
+    left: calc(50% + 1.2rem);
+    transform: translateY(-50%);
   }
 
   .track {
@@ -481,16 +646,9 @@ a:hover {
     clip-path: polygon(0 0, 100% 0, 50% 100%);
   }
 
-  .packet::before,
   .atom::before {
     top: 0;
     left: 50%;
-  }
-
-  .packet::before {
-    width: 1.7rem;
-    height: 1.7rem;
-    margin: -0.85rem 0 0 -0.85rem;
   }
 }
 
@@ -753,8 +911,12 @@ sup {
     scroll-behavior: auto;
   }
 
-  /* static pipeline: tiles, arrow and structure stay, the moving markers never appear */
+  /* static pipeline: the script shows the finished structure, and nothing travels along the arrows */
   .pipeline * {
     animation: none;
+  }
+
+  .nn-signals {
+    display: none;
   }
 }

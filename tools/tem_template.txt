@@ -1,0 +1,69 @@
+=== simulation ===
+
+generate_micrographs = yes
+log_file = LOG_FILE_PLACEHOLDER
+
+=== sample ===
+
+diameter = 240
+thickness_center = 30
+thickness_edge = 60
+
+=== particle mol ===
+
+source = pdb
+pdb_file_in = PDB_FILE_PLACEHOLDER
+voxel_size = 0.1
+use_imag_pot = no
+famp = 0.06
+map_file_re_out = MAP_FILE_PLACEHOLDER
+
+=== particleset ===
+
+particle_type = mol
+particle_coords = random
+num_particles = 1
+where = volume
+coord_file_out = COORD_FILE_PLACEHOLDER
+
+=== geometry ===
+
+gen_tilt_data = yes
+ntilts = 1
+tilt_axis = 0
+theta_start = 0
+theta_incr = 0
+geom_errors = none
+
+=== electronbeam ===
+
+acc_voltage = 300
+energy_spread = 0.0
+gen_dose = yes
+dose_per_im = 10000000
+
+=== optics ===
+
+magnification = 25000
+cs = 2.1
+cc = 2.2
+aperture = 100
+focal_length = 2.7
+cond_ap_angle = 0.001
+gen_defocus = yes
+defocus_nominal = 0.5
+
+=== detector ===
+
+det_pix_x = 2000
+det_pix_y = 2000
+pixel_size = 3
+gain = 80
+use_quantization = yes
+dqe = 0.8
+mtf_a = 0.85
+mtf_b = 0.1
+mtf_c = 0.05
+mtf_alpha = 3
+mtf_beta = 15
+image_file_out = MRC_FILE_PLACEHOLDER
