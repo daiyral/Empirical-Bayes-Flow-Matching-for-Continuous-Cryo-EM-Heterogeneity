@@ -175,7 +175,7 @@ a:hover {
   gap: clamp(0.5rem, 1.3vw, 1rem);
 }
 
-/* room above the row for the feedback arrow, once the script has drawn it */
+/* room above the row for the guided sampling arrow, once the script has drawn it */
 .pipeline-flow.has-feedback {
   padding-top: 2.2rem;
 }
@@ -297,6 +297,12 @@ a:hover {
 
 .sample-canvas {
   aspect-ratio: 260 / 310;
+}
+
+/* the protein sits left of the video's centre (its mass is at 43.5% of the width), so its label does too */
+.stage-sample .pipeline-label {
+  position: relative;
+  left: -6.5%;
 }
 
 /* rendered image vs dataset image */
@@ -482,7 +488,7 @@ a:hover {
   box-shadow: 0 0 8px var(--cyan);
 }
 
-/* feedback from the comparison to the flow matching step: drawn by the script, dim red and dashed */
+/* feedback (guided sampling and training): drawn by the script, dim red and dashed */
 .feedback {
   position: absolute;
   inset: 0;
@@ -579,7 +585,7 @@ a:hover {
     align-items: center;
   }
 
-  /* the feedback arrow runs under the image pair and up the right edge */
+  /* the guided sampling arrow runs under the image pair and up the right edge */
   .pipeline-flow.has-feedback {
     padding: 0 1.4rem 2.2rem;
   }

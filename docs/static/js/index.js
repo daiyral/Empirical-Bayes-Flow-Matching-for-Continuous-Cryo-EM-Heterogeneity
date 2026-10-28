@@ -319,13 +319,15 @@
   if (!video.paused) start();
 })();
 
-// Feedback arrow: from "compare" back to the flow matching step. It is drawn here rather than in the
-// stylesheet because its corners depend on where the layout has put the two ends.
+// Feedback arrows: guided sampling, from "compare" back to the flow matching step, and training, from the
+// 3D atoms back to the prior alongside the flow matching arrow. They are drawn here rather than in the
+// stylesheet because where they run depends on where the layout has put their ends.
 (function () {
   var flow = document.querySelector('.pipeline-flow');
-  var from = flow && flow.querySelector('.compare .pill');
-  var to = flow && flow.querySelector('.arrow-label');
-  if (!from || !to || !document.createElementNS) return;
+  var pill = flow && flow.querySelector('.compare .pill');
+  var caption = flow && flow.querySelector('.arrow-label');
+  var track = flow && flow.querySelector('.pipeline-arrow .track');   // the flow matching arrow
+  if (!pill || !caption || !track || !document.createElementNS) return;
 
   var NS = 'http://www.w3.org/2000/svg';
   function el(name, attrs, parent) {
@@ -341,37 +343,65 @@
     markerWidth: 11, markerHeight: 11, markerUnits: 'userSpaceOnUse', orient: 'auto'
   }, el('defs', {}, svg));
   el('path', { d: 'M0 0L10 5L0 10z' }, marker);
-  var line = el('path', { 'class': 'feedback-line', 'marker-end': 'url(#feedback-head)' }, svg);
-  var label = el('text', {}, svg);
-  label.textContent = 'gradient';
-  flow.classList.add('has-feedback');   // opens the lane the arrow runs in
+
+  function arrow(text) {
+    var line = el('path', { 'class': 'feedback-line', 'marker-end': 'url(#feedback-head)' }, svg);
+    var label = el('text', {}, svg);
+    label.textContent = text;
+    return { line: line, label: label };
+  }
+  var guided = arrow('guided sampling'), training = arrow('training');
+  flow.classList.add('has-feedback');   // opens the lane the guided sampling arrow runs in
+
+  // where a node sits inside the flow box
+  function place(node, box) {
+    var b = node.getBoundingClientRect();
+    return {
+      left: b.left - box.left, right: b.right - box.left, top: b.top - box.top, bottom: b.bottom - box.top,
+      x: b.left + b.width / 2 - box.left, y: b.top + b.height / 2 - box.top
+    };
+  }
+
+  function draw(arrow, d, x, y, anchor) {
+    arrow.line.setAttribute('d', d);
+    arrow.label.setAttribute('x', x);
+    arrow.label.setAttribute('y', y);
+    arrow.label.style.textAnchor = anchor || '';
+  }
 
   function layout() {
-    var box = flow.getBoundingClientRect(), a = from.getBoundingClientRect(), b = to.getBoundingClientRect();
-    var sx = a.left + a.width / 2 - box.left, r = 10, sy, lane, edge, ex, ey, d;
+    var box = flow.getBoundingClientRect(), r = 10;
+    var a = place(pill, box), b = place(caption, box), t = place(track, box);
+    var sx, sy, lane, edge, ex, ey;
     if (getComputedStyle(flow).flexDirection === 'column') {
-      // stacked: down, along the bottom, up the right edge, and in beside the caption
-      sy = a.bottom - box.top + 4;
+      // guided sampling, stacked: down, along the bottom, up the right edge, and in beside the caption
+      sx = a.x;
+      sy = a.bottom + 4;
       lane = box.height - 12;
       edge = box.width - 9;
-      ex = b.right - box.left + 9;
-      ey = b.top + b.height / 2 - box.top;
-      d = 'M' + sx + ' ' + sy + 'V' + (lane - r) + 'Q' + sx + ' ' + lane + ' ' + (sx + r) + ' ' + lane +
+      ex = b.right + 9;
+      ey = b.y;
+      draw(guided, 'M' + sx + ' ' + sy + 'V' + (lane - r) + 'Q' + sx + ' ' + lane + ' ' + (sx + r) + ' ' + lane +
         'H' + (edge - r) + 'Q' + edge + ' ' + lane + ' ' + edge + ' ' + (lane - r) +
-        'V' + (ey + r) + 'Q' + edge + ' ' + ey + ' ' + (edge - r) + ' ' + ey + 'H' + ex;
-      label.setAttribute('x', (sx + edge) / 2);
+        'V' + (ey + r) + 'Q' + edge + ' ' + ey + ' ' + (edge - r) + ' ' + ey + 'H' + ex, (sx + edge) / 2, lane);
+
+      // training, stacked: back up beside the flow matching arrow, on the side away from its caption
+      ex = t.x - 30;
+      draw(training, 'M' + ex + ' ' + (t.bottom - 2) + 'V' + (t.top + 3), ex - 10, t.y, 'end');
     } else {
-      // side by side: up, along the top, and down onto the caption
-      sy = a.top - box.top - 4;
+      // guided sampling, side by side: up, along the top, and down onto the caption
+      sx = a.x;
+      sy = a.top - 4;
       lane = 12;
-      ex = b.left + b.width / 2 - box.left;
-      ey = b.top - box.top - 9;
-      d = 'M' + sx + ' ' + sy + 'V' + (lane + r) + 'Q' + sx + ' ' + lane + ' ' + (sx - r) + ' ' + lane +
-        'H' + (ex + r) + 'Q' + ex + ' ' + lane + ' ' + ex + ' ' + (lane + r) + 'V' + ey;
-      label.setAttribute('x', (sx + ex) / 2);
+      ex = b.x;
+      ey = b.top - 9;
+      draw(guided, 'M' + sx + ' ' + sy + 'V' + (lane + r) + 'Q' + sx + ' ' + lane + ' ' + (sx - r) + ' ' + lane +
+        'H' + (ex + r) + 'Q' + ex + ' ' + lane + ' ' + ex + ' ' + (lane + r) + 'V' + ey, (sx + ex) / 2, lane);
+
+      // training, side by side: back along the flow matching arrow, just under it, with its label beneath
+      ey = t.y + 30;
+      draw(training, 'M' + (t.right - 2) + ' ' + ey + 'H' + (t.left + 3), t.x, ey + 16);
     }
-    label.setAttribute('y', lane);
-    line.setAttribute('d', d);
   }
 
   layout();

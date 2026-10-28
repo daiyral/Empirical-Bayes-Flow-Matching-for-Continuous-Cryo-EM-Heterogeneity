@@ -17,7 +17,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="static/css/index.css">
+  <link rel="stylesheet" href="static/css/index.css?v=2">
 </head>
 <body>
 
@@ -58,7 +58,7 @@
     <div class="container wide">
       <figure class="pipeline">
         <figcaption class="pipeline-title"><b>EB-FM</b> learns a prior over 3D atom ensembles from 2D cryo-EM images</figcaption>
-        <div class="pipeline-flow" role="img" aria-label="The prior, drawn as a neural network whose edge weights keep changing as it trains, generates 3D atoms by flow matching: a cloud of blue points that slowly turns into a moving protein structure. The output is rendered into a cryo-EM image, which is compared with an image from the cryo-EM dataset and grows more similar to it. A faint red arrow labelled gradient leads from the comparison back to the flow matching step.">
+        <div class="pipeline-flow" role="img" aria-label="The prior, drawn as a neural network whose edge weights keep changing as it trains, generates 3D atoms by flow matching: a cloud of blue points that slowly turns into a moving protein structure. The output is rendered into a cryo-EM image, which is compared with an image from the cryo-EM dataset and grows more similar to it. A faint red arrow labelled guided sampling leads from the comparison back to the flow matching step, and another labelled training runs back alongside the flow matching arrow, from the 3D atoms to the prior.">
 
           <div class="pipeline-stage stage-net">
               <svg class="nn" viewBox="0 0 150 170" aria-hidden="true">
@@ -435,6 +435,6 @@
     </div>
   </footer>
 
-  <script src="static/js/index.js"></script>
+  <script src="static/js/index.js?v=2"></script>
 </body>
 </html>
